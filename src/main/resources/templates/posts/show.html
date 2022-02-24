@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Single Post</title>
+    <th:block th:include="partials/header :: styling"></th:block>
+</head>
+<body>
+<div class="card" style="width: 18rem;">
+    <div class="card-body">
+        <h5 class="card-title" th:text="${singlePost.getTitle()}">Card title</h5>
+        <p class="card-text" th:text="${singlePost.getBody()}">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+    </div>
+</div>
+<th:block th:include="partials/header :: scripts"></th:block>
+</body>
+</html>
