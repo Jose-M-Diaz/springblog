@@ -6,6 +6,7 @@
     <th:block th:include="partials/header :: styling"></th:block>
 </head>
 <body>
+<nav th:replace="partials/navbar :: navbar"></nav>
 <div class="card" style="width: 18rem;">
     <div class="card-body">
         <h5 class="card-title" th:text="${singlePost.getTitle()}">Card title</h5>
