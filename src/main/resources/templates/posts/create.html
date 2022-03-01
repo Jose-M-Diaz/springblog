@@ -2,26 +2,25 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Edit Post</title>
+    <title>Create Post</title>
     <th:block th:include="partials/header :: styling"></th:block>
 </head>
 <body>
 <nav th:replace="partials/navbar :: navbar"></nav>
-<form th:action="@{/post/create}" th:method="POST">
+<form th:action="@{/posts/create}" th:method="POST" th:object="${post}"> <!--attributeName in controller must match field name-->
     <div class="form-group">
         <label for="title">Title</label>
         <br>
-        <input type="text" class="form-control" id="title" placeholder="">
+        <input type="text" class="form-control" id="title" name="title" th:field="*{title}">
     </div>
     <br>
     <div class="form-group">
         <label for="body">Body</label>
         <br>
-        <textarea class="form-control" id="body" rows="3"></textarea>
+        <textarea class="form-control" id="body" rows="3" name="body" th:field="*{body}"></textarea>
     </div>
     <button type="submit">Post</button>
 </form>
-
 <th:block th:include="partials/header :: scripts"></th:block>
 </body>
 </html>

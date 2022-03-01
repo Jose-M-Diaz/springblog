@@ -31,7 +31,6 @@ public class PostController {
 
     @GetMapping("/posts/{id}")
     public String viewPost(@PathVariable long id, Model model) {
-        Post post1 = new Post();
         model.addAttribute("singlePost", postDao.getById(id));
         return "posts/show";
     }
@@ -44,22 +43,23 @@ public class PostController {
     }
 
     @PostMapping("/post{id}/edit")
-    public String submitEdit(@RequestParam(name = "title") String title, @RequestParam(name = "body") String body, @PathVariable long id) {
-        Post postToEdit = postDao.getById(id);
-        postToEdit.setTitle(title);
-        postToEdit.setBody(body);
-        postDao.save(postToEdit);
-        return "redirect: /posts";
+    public String submitEdit(@PathVariable long id, @ModelAttribute Post post) {
+//        Post postToEdit = postDao.getById(id);
+//        postToEdit.setTitle(title);
+//        postToEdit.setBody(body);
+        postDao.save(post);
+        return "redirect:/posts";
     }
 
     @GetMapping("/posts/create")
-    public String viewForm () {
+    public String viewForm (Model model) {
+        model.addAttribute("post", new Post());
         return "posts/create";
     }
 
     @PostMapping("/posts/create")
-    public String createPost(@RequestParam(name = "title") String title, @RequestParam(name = "body") String body) {
-        Post newPost = new Post(title, body);
+    public String createPost(@ModelAttribute Post newPost) {
+        //Post newPost = new Post(title, body);
         newPost.setUser(userDao.getById(1L));
         postDao.save(newPost);
 
@@ -70,6 +70,6 @@ public class PostController {
     public String delete(@PathVariable long id) {
         Post postToDelete = postDao.getById(id);
         postDao.delete(postToDelete);
-        return "redirect: /posts";
+        return "redirect:/posts";
     }
 }

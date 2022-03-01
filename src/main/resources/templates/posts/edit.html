@@ -7,17 +7,18 @@
 </head>
 <body>
 <nav th:replace="partials/navbar :: navbar"></nav>
-<form th:action="@{/post/{id}/edit (id = ${postToEdit.getId()})}" th:method="POST">
+<form th:action="@{/posts/{id}/edit (id = ${postToEdit.getId()})}" th:method="POST" th:object="${postToEdit}">
     <div class="form-group">
         <label for="title">Title</label>
         <br>
-        <input type="text" class="form-control" id="title" placeholder="" th:value="${postToEdit.getTitle()}">
+        <input type="text" class="form-control" id="title" name="title" th:value="${postToEdit.getTitle()}" th:fields="*{title}">
     </div>
+    <input type="hidden" th:value="${postToEdit.getId()}" th:field="*{id}">
     <br>
     <div class="form-group">
         <label for="body">Body</label>
         <br>
-        <textarea class="form-control" id="body" rows="3" th:text="${postToEdit.getBody()}"></textarea>
+        <textarea class="form-control" id="body" rows="3" name="body" th:text="${postToEdit.getBody()}" th:field="*{body}"></textarea>
     </div>
     <button type="submit">Post</button>
 </form>
