@@ -1,7 +1,9 @@
 package com.codeup.springblog.controllers;
 
 import com.codeup.springblog.models.Post;
+import com.codeup.springblog.models.User;
 import com.codeup.springblog.repositories.PostRepository;
+import com.codeup.springblog.repositories.UserRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -14,31 +16,23 @@ import java.util.List;
 @Controller
 public class PostController {
     private PostRepository postDao;
-    public PostController(PostRepository postDao) {
+    private UserRepository userDao;
+    public PostController(PostRepository postDao, UserRepository userDao) {
         this.postDao = postDao;
+        this.userDao = userDao;
     }
 
     @GetMapping ("/posts")
     public String index(Model model) {
-        List<Post> allPosts = postDao.findAll();
-//        Post post2 = new Post(2, "test", "testing out code");
-//        Post post3 = new Post(3, "another test", "another test");
-//        Post post4 = new Post(4, "and another test", "yet another test");
-//
-//        allPosts.add(post2);
-//        allPosts.add(post3);
-//        allPosts.add(post4);
-
-        model.addAttribute("allPosts", allPosts);
-//        model.addAttribute("allPosts", postDao.findAll());
+       model.addAttribute("allPosts", postDao.findAll());
 
         return "posts/index";
     }
 
-    @RequestMapping(path = "/posts/{id}", method = RequestMethod.GET)
+    @GetMapping("/posts/{id}")
     public String viewPost(@PathVariable long id, Model model) {
-        Post post1 = new Post(1, "Regulus Spring", "Working on Spring in class");
-        model.addAttribute("singlePost", post1);
+        Post post1 = new Post();
+        model.addAttribute("singlePost", postDao.getById(id));
         return "posts/show";
     }
 
@@ -52,23 +46,21 @@ public class PostController {
     @PostMapping("/post{id}/edit")
     public String submitEdit(@RequestParam(name = "title") String title, @RequestParam(name = "body") String body, @PathVariable long id) {
         Post postToEdit = postDao.getById(id);
-
         postToEdit.setTitle(title);
         postToEdit.setBody(body);
         postDao.save(postToEdit);
-
         return "redirect: /posts";
     }
 
-    @RequestMapping(path = "/posts/create", method = RequestMethod.GET)
-    @ResponseBody
+    @GetMapping("/posts/create")
     public String viewForm () {
-        return "view the form for creating a post";
+        return "posts/create";
     }
 
     @PostMapping("/posts/create")
     public String createPost(@RequestParam(name = "title") String title, @RequestParam(name = "body") String body) {
         Post newPost = new Post(title, body);
+        newPost.setUser(userDao.getById(1L));
         postDao.save(newPost);
 
         return "redirect:/posts";
@@ -78,7 +70,6 @@ public class PostController {
     public String delete(@PathVariable long id) {
         Post postToDelete = postDao.getById(id);
         postDao.delete(postToDelete);
-
         return "redirect: /posts";
     }
 }
