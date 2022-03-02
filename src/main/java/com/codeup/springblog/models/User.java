@@ -16,7 +16,7 @@ public class User {
     @Column(nullable = false, unique = true)
     private String email;
 
-    @Column(nullable = false, length = 50)
+    @Column(nullable = false)
     private String password;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
@@ -24,13 +24,13 @@ public class User {
 
     public User() {}
 
-//    public User(long id, String username, String email, String password, List<Post> posts) {
-//        this.id = id;
-//        this.username = username;
-//        this.email = email;
-//        this.password = password;
-//        this.posts = posts;
-//    }
+    public User(long id, String username, String email, String password, List<Post> posts) {
+        this.id = id;
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.posts = posts;
+    }
 //
 //    public User(String username, String email, String password, List<Post> posts) {
 //        this.username = username;
@@ -38,6 +38,13 @@ public class User {
 //        this.password = password;
 //        this.posts = posts;
 //    }
+    public User(User copy) {
+        id = copy.id; // This line is SUPER important! Many things won't work if it's absent
+        email = copy.email;
+        username = copy.username;
+        password = copy.password;
+        posts = copy.posts;
+    }
 
     public long getId() {
         return id;

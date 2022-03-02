@@ -1,11 +1,13 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
     <th:block th:include="partials/header :: styling"></th:block>
 </head>
 <body>
+<nav th:replace="partials/navbar :: navbar"></nav>
+
 <div class="card-body" th:each="post : ${allPosts}">
     <h5 class="card-title" th:text="${post.getTitle()}">Card title</h5>
     <p class="card-text" th:text="${post.getBody()}">Some quick example text to build on the card title and make up the bulk of the card's content.</p>

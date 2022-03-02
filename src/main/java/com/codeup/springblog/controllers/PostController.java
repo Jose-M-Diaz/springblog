@@ -1,9 +1,11 @@
 package com.codeup.springblog.controllers;
 
 import com.codeup.springblog.models.Post;
+import com.codeup.springblog.models.User;
 import com.codeup.springblog.repositories.PostRepository;
 import com.codeup.springblog.repositories.UserRepository;
 import com.codeup.springblog.services.EmailService;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -38,23 +40,29 @@ public class PostController {
 
     @GetMapping("/posts/{id}/edit")
     public String editPost(@PathVariable long id, Model model) {
-        Post postToEdit = postDao.getById(id);
-        model.addAttribute("postToEdit", postToEdit);
-        return "posts/edit";
+        Post posttoEdit = postDao.getById(id);
+        User loggedInUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (posttoEdit.getUser().getId() == loggedInUser.getId()) {
+            model.addAttribute("postToEdit", posttoEdit);
+            return "posts/edit";
+        } else {
+            return "redirect:/posts";
+        }
+
     }
 
     @PostMapping("/post{id}/edit")
-    public String submitEdit(@PathVariable long id, @ModelAttribute Post post) {
+    public String submitEdit(@ModelAttribute Post postToEdit) {
 //        Post postToEdit = postDao.getById(id);
 //        postToEdit.setTitle(title);
 //        postToEdit.setBody(body);
-        postDao.save(post);
+        postDao.save(postToEdit);
         return "redirect:/posts";
     }
 
     @GetMapping("/posts/create")
-    public String viewForm (Model model) {
-        model.addAttribute("post", new Post());
+    public String viewEditForm (Model model) {
+        model.addAttribute("newPost", new Post());
         return "posts/create";
     }
 
@@ -69,8 +77,7 @@ public class PostController {
 
     @PostMapping("/posts/{id}/delete")
     public String delete(@PathVariable long id) {
-        Post postToDelete = postDao.getById(id);
-        postDao.delete(postToDelete);
+        postDao.deleteById(id);
         return "redirect:/posts";
     }
 }
