@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
-    <title>Single Post</title>
+    <title th:text="${singlePost.getTitle()}"></title>
     <th:block th:include="partials/header :: styling"></th:block>
 </head>
 <body>
